@@ -1,0 +1,49 @@
+import mongoose, { model, Schema } from "mongoose";
+import bcrypt from "bcrypt";
+
+const userSchema = new Schema({
+  username: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 50,
+  },
+  email: {
+    type: String,
+    required: true,
+    minlength: 6,
+    maxlength: 50,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+//instance methods
+userSchema.methods.isStudent = function () {
+  return this.role == "student";
+};
+
+userSchema.methods.isInstructor = function () {
+  return this.role == "instructor";
+};
+
+userSchema.methods.comparePassword = async function (password, cb) {
+  let result = await bcrypt.compare(password, this.password);
+  return cb(null, result);
+};
+
+//mongoose middlewares
+// if user is new, or chanege the password,and his password will be hashed
+userSchema.pre("save", async function () {
+  if (this.isNew || this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+});
+
+export const User = model("User", userSchema);
