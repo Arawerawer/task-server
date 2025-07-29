@@ -33,9 +33,8 @@ userSchema.methods.isInstructor = function () {
   return this.role == "instructor";
 };
 
-userSchema.methods.comparePassword = async function (password, cb) {
-  let result = await bcrypt.compare(password, this.password);
-  return cb(null, result);
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 
 //mongoose middlewares

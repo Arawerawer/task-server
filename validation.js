@@ -26,22 +26,14 @@ export const registerValidation = (data) => {
 // 登入驗證
 export const loginValidation = (data) => {
   const schema = Joi.object({
-    email: Joi.string().min(6).max(50).required().email().messages({
-      "string.empty": "信箱不能為空",
-      "string.email": "信箱格式不正確",
-      "string.min": "密碼至少要有 6 個字",
-      "string.max": "密碼不能超過 50 個字",
-      "any.required": "信箱是必填欄位",
-    }),
-    password: Joi.string().min(6).max(255).required().messages({
-      "string.empty": "密碼不能為空",
-      "string.min": "密碼至少要有 6 個字",
-      "string.max": "密碼不能超過 50 個字",
-      "any.required": "密碼是必填欄位",
-    }),
+    email: Joi.string().min(6).max(50).required().email().label("信箱"),
+    password: Joi.string().min(6).max(255).required().label("密碼"),
   });
 
-  return schema.validate(data);
+  return schema.validate(data, {
+    messages: commonMessages,
+    errors: { wrap: { label: "" } },
+  });
 };
 
 // 任務驗證
