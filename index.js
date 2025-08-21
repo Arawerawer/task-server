@@ -20,7 +20,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173", // 前端的位址
+    origin: [
+      "https://task-frontend-rho-rose.vercel.app",
+      "http://localhost:5173",
+    ], // 前端的位址
   })
 );
 setupPassport(passport);
