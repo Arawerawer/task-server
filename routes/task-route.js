@@ -32,6 +32,21 @@ router.get("/:_user_id", async (req, res) => {
     });
   }
 });
+//get userTask
+router.get("/", async (req, res) => {
+  try {
+    const taskFound = await Task.find({ user: req.user._id }).exec();
+
+    if (taskFound.length === 0) {
+      return res.status(404).json({ message: "找不到該事項" });
+    }
+
+    res.json({ taskFound, message: "抓取成功" });
+  } catch (error) {
+    res.status(500).json({ message: "伺服器錯誤" });
+  }
+});
+
 //查詢任務_id
 // router.get("/:_id", async (req, res) => {
 //   const { _id } = req.params;

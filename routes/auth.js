@@ -24,8 +24,8 @@ router.post("/register", async (req, res) => {
     if (exists) return res.status(409).json({ message: "該信箱已被註冊" });
 
     // 儲存新使用者
-    const newUser = await new User({ email, username, password }).save();
-    res.status(200).json({ message: "註冊成功", username });
+    await new User({ email, username, password }).save();
+    res.status(200).json({ message: "註冊成功" });
   } catch (err) {
     if (err?.errors) {
       return res.status(400).json({
@@ -57,9 +57,6 @@ router.post("/login", async (req, res) => {
       const token = jwt.sign(tokenObject, process.env.PASSPORT_SECRET);
       return res.status(200).json({
         token, // 傳回給前端的 JWT
-        user: {
-          _id: foundUser._id,
-        },
       });
     } else {
       return res.status(401).json({
